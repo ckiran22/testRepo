@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<meta name="description" content="enzi-form : ">
+	<link rel="stylesheet" type="text/css" media="screen" href="gh-pages/css/default.css">
+	<link rel="stylesheet" type="text/css" media="screen" href="src/vendor_css/bootstrap/css/bootstrap.min.css">
+	<title>enzi-table</title>
+</head>
+<body>
+	<!-- HEADER -->
+	<div id="header_wrap" class="outer">
+		<header class="inner">
+			<a id="forkme_banner" href="https://github.com/enzi-controls/enzi-table">View on GitHub</a>
+			<h1 id="project_title">enzi-form</h1>
+			<h2 id="project_tagline"></h2>
+			<section id="downloads">
+				<a class="zip_download_link" href="https://github.com/enzi-controls/enzi-table/zipball/master">Download this project as a .zip file</a>
+				<a class="tar_download_link" href="https://github.com/enzi-controls/enzi-table/tarball/master">Download this project as a tar.gz file</a>
+			</section>
+		</header>
+	</div>
+	<!-- MAIN CONTENT -->
+	<div id="main_content_wrap" class="outer">
+		<section id="main_content" class="inner">
+			<h3>
+				<a id="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to enzi-table.
+			</h3>
+			<p>
+				This angular directive allows you to records in tabular format . It also has capablity to do search records in object(table) on any type of database.
+			</p>
+			<p>
+				Please note this control uses bootstrap css to format the UI, hence to override look and feel, you need to override bootstarp css.
+			</p>
+			<a href="src/demo.html" class="btn" target="_blank">Demo</a>
+            <h3>Javascript code</h3>
+            <xmp>
+<script type="text/javascript">
+    angular.module('myApp', ['enzi-form'])
+    .controller('test', function ($scope, enziForm) {
+        $scope.records = [];
+        var fields = [
+            { name: 'Id', label: 'Id', type: 'number', required: true },
+            { name: 'Name', label: 'Name', type: 'text', required: true },
+            { name: 'Email', label: 'Email', type: 'email', required: true },
+            { name: 'Address', label: 'Address', type: 'textarea', required: true },
+            { name: 'StartDate', label: 'Start Date', type: 'date', required: true },
+            { name: 'EndTime', label: 'End Time', type: 'datetime-local', required: true },
+            { name: 'Country', label: 'Country', type: 'picklist', required: true, picklistValues: ['India', 'United States'] },
+            { name: 'State', label: 'State', type: 'picklist', required: true, picklistValues: { "India": ['Gujarat', 'Maharashtra'], 'United States': ['California', 'New York'] }, dependsOn: 'Country' },
+        ];
+
+        $scope.openDialog = function () {
+            enziForm.showForm('Create Record', fields, { Id: $scope.records.length + 1, Name: 'Test User', StartDate: new Date(), EndTime: new Date() }, function (record, onsuccess) {
+                $scope.records.push(record);
+                onsuccess();
+            }, function (record) {
+                alert('cancel');
+            });
+        }
+
+        $scope.delete = function (record) {
+            var found = $scope.records.indexOf(record);
+            if (found >= 0)
+                $scope.records.splice(found, 1);
+        }
+        $scope.edit = function (record) {
+            enziForm.showForm('Edit Record', fields, record, function (record, onsuccess) {
+                onsuccess();
+            }, function (record) {
+                alert('cancel');
+            });
+        }
+    })
+</script>
+            </xmp>
+            <h3>HTML code</h3>
+            <xmp>
+<body ng-app="myApp" ng-controller="test">
+    <button ng-click="openDialog()">Create Lookup Record</button>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Action</th>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Start Date</th>
+                    <th>End Time</th>
+                    <th>Country</th>
+                    <th>State</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="r in records">
+                    <td><a ng-click="edit(r)">Edit</a> | <a ng-click="delete(r)">Del</a></td>
+                    <td>{{r.Id}}</td>
+                    <td>{{r.Name}}</td>
+                    <td>{{r.Email}}</td>
+                    <td>{{r.Address}}</td>
+                    <td>{{r.StartDate | date : "yyyy/MM/dd"}}</td>
+                    <td>{{r.EndTime | date : "yyyy/MM/dd h:mma"}}</td>
+                    <td>{{r.Country}}</td>
+                    <td>{{r.State}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+            </xmp>
+            <br />
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Field</th>
+                            <th>Value</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>name</td>
+                            <td>valid field name string (for input controls)</td>
+                            <td>This must be a unique name for the field in the record, using which input controls will be bound with the record.</td>
+                        </tr>
+                        <tr>
+                            <td>label</td>
+                            <td>string</td>
+                            <td>String to be diplayed as label before the input control</td>
+                        </tr>
+                        <tr>
+                            <td>placeholder</td>
+                            <td>string</td>
+                            <td>String to be diplayed as place holder in the input control when no value is displayed in the control</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="7">type</td>
+                            <td>text</td>
+                            <td>Single line text field</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">required</td>
+                            <td>true</td>
+                            <td>Indicates that the field is required and user must input a value to proceed, if not entered form can not be submitted</td>
+                        </tr>
+                        <tr>
+                            <td>false</td>
+                            <td>Indicates that the field is not required</td>
+                        </tr>
+                    </tbody>
+                </table>
+</section>
+                    </div>
+
+                    <!-- FOOTER  -->
+                    <div id="footer_wrap" class="outer">
+                        <footer class="inner">
+                            <p class="copyright">enzi-table maintained by <a href="https://github.com/enzi-controls">Enzigma Software Pvt. Ltd.</a></p>
+                            <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+                        </footer>
+                    </div>
+                </body>
+                </html>

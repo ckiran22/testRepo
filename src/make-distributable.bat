@@ -1,0 +1,1 @@
+java -jar compiler.jar --js application_js\enz-table.js --js_output_file ..\enzi-table.min.js --create_source_map ..\enzi-table.min.js.map
